@@ -1,0 +1,25 @@
+ARG DEFAULT_CITY="New York"
+
+FROM ubuntu AS builder
+RUN apt-get update -q -y && apt-get install -q -y \
+    autoconf \
+    automake \
+    build-essential \
+    git \
+    m4 \
+    make \
+    perl
+
+RUN git clone https://github.com/hebcal/hebcal.git
+
+RUN cd hebcal && \
+    aclocal && \
+    autoconf && \
+    automake --foreign --add-missing && \
+    ./configure && \
+    make install
+
+FROM ubuntu
+COPY --from=builder /usr/local/bin/hebcal /usr/local/bin/hebcal
+ENV HEBCAL_CITY="${DEFAULT_CITY}"
+ENTRYPOINT ["/usr/local/bin/hebcal"]

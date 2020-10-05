@@ -1,0 +1,25 @@
+ARG DEFAULT_CITY="New York"
+
+FROM alpine AS builder
+RUN apk update && apk upgrade && apk add \
+    autoconf \
+    automake \
+    build-base \
+    git \
+    m4 \
+    make \
+    perl
+
+RUN git clone https://github.com/hebcal/hebcal.git
+
+RUN cd hebcal && \
+    aclocal && \
+    autoconf && \
+    automake --foreign --add-missing && \
+    ./configure && \
+    make install
+
+FROM alpine
+COPY --from=builder /usr/local/bin/hebcal /usr/local/bin/hebcal
+ENV HEBCAL_CITY="${DEFAULT_CITY}"
+ENTRYPOINT ["/usr/local/bin/hebcal"]
