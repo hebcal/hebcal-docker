@@ -21,5 +21,7 @@ runtime, see:
 - https://github.com/hebcal/hebcal#candle-lighting-times
 
 Alternatively change city at runtime:
-`docker run -e HEBCAL_CITY="${CITY}" --rm hebcal...`
-`docker run --rm hebcal -C ${CITY} ...`
+```
+docker run -e HEBCAL_CITY="${CITY}" --rm hebcal...
+docker run --rm hebcal -C ${CITY} ...
+```
